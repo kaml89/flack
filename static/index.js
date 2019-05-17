@@ -83,19 +83,25 @@ document.addEventListener('DOMContentLoaded',() => {
   //   socket.emit('join', {username: 'bogusia', room: roomName});
   // });
   sendMessageButton.addEventListener('click', () => {
-    socket.emit('chat message', {username: username, message: textarea.value, room: roomName});
+    socket.emit('chat message', {username: username, message: textarea.value, time: Date.now(), room: roomName});
     textarea.value = '';
   });
   
   socket.on('new chat message', function(data) {
       //chatMessages.innerHTML += `<div><span>${data.username}</span>: ${data.message}</div>`;
       newMessage(data);
+      //console.log(data);
     });
 });
 
 function newMessage(data) {
+  const date = new Date(data.time);
+  const hours = date.getHours();
+
+
   document.querySelector('.chat').innerHTML += 
-      `<div class='message'><span class='author'>${data.username}</span><br> ${data.message}
+      `<div class='message'>
+        <span class='author'>${data.username}</span> <span class='time'>${date.getHours()}:${date.getMinutes()}</span><br> ${data.message}
 
       </div>`
 }
