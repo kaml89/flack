@@ -45,8 +45,6 @@ def on_leave(data):
 @socketio.on('chat message')
 def on_chat_message(data):
     room = data['room']
-    print(data)
     emit('new chat message', data, room=room)
-    # messages[room].append({data['username']:data['message']})
     messages[room].append({'user': data['username'], 'message': data['message'], 'time': data['time']})
 

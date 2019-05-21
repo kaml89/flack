@@ -64,24 +64,18 @@ document.addEventListener('DOMContentLoaded',() => {
 
   socket.on('joining room', (msg) => {
     chatMessages.innerHTML = '';
-    //console.log(msg);
-    //changeRoom();
-    msg['messages'].forEach(item => {
-      for (let key in item) {
-        //chatMessages.innerHTML += `<div><span>${key}</span>: ${item[key]}</div>`;
-        document.querySelector('.chat').innerHTML += 
-          `<div class='message'><span class='author'>${key}</span><br> ${item[key]}
 
-          </div>`
-      }
-    });
+    msg['messages'].forEach(item => {
+      const date = new Date(item.time);
+      document.querySelector('.chat').innerHTML += 
+        `<div class='message'>
+            <span class='author'>${item.user}</span> <span class='time'>${date.getHours()}:${date.getMinutes()}</span><br> ${item.message}
+      
+        </div>`
+     });
     document.querySelector('.room-window').innerHTML = `${localStorage.getItem('room')}`;
   });
   
-  // socket.on('connect', function() {
-  //   // Connected, let's sign-up for to receive messages for this room
-  //   socket.emit('join', {username: 'bogusia', room: roomName});
-  // });
   sendMessageButton.addEventListener('click', () => {
     socket.emit('chat message', {username: username, message: textarea.value, time: Date.now(), room: roomName});
     textarea.value = '';
@@ -123,8 +117,8 @@ function load_page(name) {
   request.onload = () => {
     const response = request.responseText;
     console.log(response);
-    const arr = JSON.parse(response);
-    console.log(arr);
+    // const arr = JSON.parse(response);
+    // console.log(arr);
     //document.querySelector();
   };
   request.send();
