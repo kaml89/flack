@@ -111,15 +111,14 @@ function addNewChannel(channelName) {
 }
 
 function load_page(name) {
-  console.log('aaaaa');
   const request = new XMLHttpRequest();
   request.open('GET', `/room/${name}`);
   request.onload = () => {
     const response = request.responseText;
-    console.log(response);
-    // const arr = JSON.parse(response);
-    // console.log(arr);
-    //document.querySelector();
+    
+    // push state to URL
+    history.pushState(null, name, name);
   };
+
   request.send();
 }

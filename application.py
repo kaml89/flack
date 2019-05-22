@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO, emit, join_room, leave_room, send
 
 app = Flask(__name__)
@@ -15,8 +15,7 @@ def index():
 
 @app.route("/room/<room>")
 def switch_room(room):
-  return str(messages[room])
-
+  return jsonify(messages[room])
 
 
 @socketio.on('connected')
