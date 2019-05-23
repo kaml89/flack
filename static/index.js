@@ -34,13 +34,13 @@ document.addEventListener('DOMContentLoaded',() => {
     roomName = e.target.dataset.channel;
     socket.emit('join', {room: roomName, username: username});
     localStorage.setItem('room', roomName);
-    load_page(roomName);
+    loadPage(roomName);
   });
 
   document.querySelector('.new-channel').addEventListener('click', () => {
     socket.emit('leave', {room: roomName, username: username});
     roomName = document.querySelector('.new-channel-input').value;
-    console.log(roomName);
+    document.querySelector('.new-channel-input').value = '';
     socket.emit('join', {room: roomName, username: username});
     localStorage.setItem('room', roomName);
     addNewChannel(roomName);
@@ -56,25 +56,21 @@ document.addEventListener('DOMContentLoaded',() => {
     chatMessages.innerHTML += `<div>${msg}</div>`;
   });
 
-  
+ 
 
-  // zmienić joining room na zwykły request do serwera xmlhttprequest
-
-
-
-  socket.on('joining room', (msg) => {
-    chatMessages.innerHTML = '';
-
-    msg['messages'].forEach(item => {
-      const date = new Date(item.time);
-      document.querySelector('.chat').innerHTML += 
-        `<div class='message'>
-            <span class='author'>${item.user}</span> <span class='time'>${date.getHours()}:${date.getMinutes()}</span><br> ${item.message}
+  // socket.on('joining room', (msg) => {
+  //   chatMessages.innerHTML = '';
+  //   console.log(msg['messages']);
+  //   msg['messages'].forEach(item => {
+  //     const date = new Date(item.time);
+  //     document.querySelector('.chat').innerHTML += 
+  //       `<div class='message'>
+  //           <span class='author'>${item.user}</span> <span class='time'>${date.getHours()}:${date.getMinutes()}</span><br> ${item.message}
       
-        </div>`
-     });
-    document.querySelector('.room-window').innerHTML = `${localStorage.getItem('room')}`;
-  });
+  //       </div>`
+  //    });
+  //   document.querySelector('.room-window').innerHTML = `${localStorage.getItem('room')}`;
+  // });
   
   sendMessageButton.addEventListener('click', () => {
     socket.emit('chat message', {username: username, message: textarea.value, time: Date.now(), room: roomName});
@@ -108,15 +104,25 @@ function addNewChannel(channelName) {
   const convertedName = channelName.split(' ').join('-');
   document.querySelector('.channels-list').innerHTML 
       += `<div data-channel='${convertedName}'>${channelName}</div>`;
+  
 }
 
-function load_page(name) {
+function loadPage(name) {
   const request = new XMLHttpRequest();
   request.open('GET', `/room/${name}`);
   request.onload = () => {
-    const response = request.responseText;
-    
+    const response = JSON.parse(request.responseText);
+    document.querySelector('.chat').innerHTML = '';
     // push state to URL
+    response.forEach((item) => {
+      const date = new Date(item.time);
+      document.querySelector('.chat').innerHTML += 
+        `<div class='message'>
+            <span class='author'>${item.user}</span> <span class='time'>${date.getHours()}:${date.getMinutes()}</span><br> ${item.message}
+      
+        </div>`
+    });
+    document.querySelector('.room-window').innerHTML = `${localStorage.getItem('room')}`;
     history.pushState(null, name, name);
   };
 
