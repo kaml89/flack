@@ -3,9 +3,10 @@ let roomName = 'room1';
 
 document.addEventListener('DOMContentLoaded',() => {
   const chatMessages = document.querySelector('.chat');
+  const chatForm = document.querySelector('.chat-form');
   const selectRoom = document.querySelector('#room');
-  const textarea = document.querySelector('textarea');
-  const sendMessageButton = document.querySelector('#send-message');
+  const chatInput = document.querySelector('.chat-input');
+  const sendButton = document.querySelector('.send-button');
 
   let username = '';
   if(!localStorage.getItem('username')) {
@@ -29,7 +30,6 @@ document.addEventListener('DOMContentLoaded',() => {
 
 
   document.querySelector('.channels-list').addEventListener('click', (e) => {
-    //console.log(e.target.dataset.channel)
     socket.emit('leave', {room: roomName, username: username});
     roomName = e.target.dataset.channel;
     socket.emit('join', {room: roomName, username: username});
@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded',() => {
     socket.emit('join', {room: roomName, username: username});
     localStorage.setItem('room', roomName);
     addNewChannel(roomName);
+    //console.log(roomName);
+    changeRoom();
 
   }); 
 
@@ -72,9 +74,10 @@ document.addEventListener('DOMContentLoaded',() => {
   //   document.querySelector('.room-window').innerHTML = `${localStorage.getItem('room')}`;
   // });
   
-  sendMessageButton.addEventListener('click', () => {
-    socket.emit('chat message', {username: username, message: textarea.value, time: Date.now(), room: roomName});
-    textarea.value = '';
+  chatForm.addEventListener('submit', (e) => {
+    socket.emit('chat message', {username: username, message: chatInput.value, time: Date.now(), room: roomName});
+    e.preventDefault();
+    chatInput.value = '';
   });
   
   socket.on('new chat message', function(data) {
@@ -104,7 +107,6 @@ function addNewChannel(channelName) {
   const convertedName = channelName.split(' ').join('-');
   document.querySelector('.channels-list').innerHTML 
       += `<div data-channel='${convertedName}'>${channelName}</div>`;
-  
 }
 
 function loadPage(name) {
@@ -123,7 +125,8 @@ function loadPage(name) {
         </div>`
     });
     document.querySelector('.room-window').innerHTML = `${localStorage.getItem('room')}`;
-    history.pushState(null, name, name);
+    //history.pushState(null, name, name);
+    changeRoom();
   };
 
   request.send();
