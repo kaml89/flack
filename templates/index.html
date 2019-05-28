@@ -9,10 +9,10 @@
     <body>
       <div class="container">
         <div class='channels'>
-          <div class="new-channel-form">
+          <form class="new-channel-form">
               <input class= 'new-channel-input' type="text">
               <button class='new-channel'>New channel</button>
-          </div>
+          </form>
           <div class="channels-list">
             {% for item in messages %}
               <div data-channel={{item}}>{{item}}</div>

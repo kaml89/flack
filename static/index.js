@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded',() => {
   const selectRoom = document.querySelector('#room');
   const chatInput = document.querySelector('.chat-input');
   const sendButton = document.querySelector('.send-button');
+  const newChannelForm = document.querySelector('.new-channel-form');
+  const channelsList = document.querySelector('.channels-list');
 
   let username = '';
   if(!localStorage.getItem('username')) {
@@ -29,7 +31,7 @@ document.addEventListener('DOMContentLoaded',() => {
   });
 
 
-  document.querySelector('.channels-list').addEventListener('click', (e) => {
+  channelsList.addEventListener('click', (e) => {
     socket.emit('leave', {room: roomName, username: username});
     roomName = e.target.dataset.channel;
     socket.emit('join', {room: roomName, username: username});
@@ -37,7 +39,8 @@ document.addEventListener('DOMContentLoaded',() => {
     loadPage(roomName);
   });
 
-  document.querySelector('.new-channel').addEventListener('click', () => {
+  newChannelForm.addEventListener('submit', (e) => {
+    e.preventDefault();
     socket.emit('leave', {room: roomName, username: username});
     roomName = document.querySelector('.new-channel-input').value;
     document.querySelector('.new-channel-input').value = '';
