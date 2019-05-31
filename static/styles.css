@@ -25,7 +25,8 @@
 .chat-window {
   grid-column: 2 / 3;
   grid-row: 1 / 3;
-  }
+  overflow: auto;
+}
 
 .chat-form {
   background-color: pink;
@@ -60,6 +61,8 @@
   padding: 10px;
   border-top: 2px solid #ddd;
   background: #eee;
+  position: sticky;
+  bottom: 0;
 }
 .chat-form * {
   /* padding: 10px; */

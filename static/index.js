@@ -134,3 +134,7 @@ function loadPage(name) {
 
   request.send();
 }
+
+// wygląd w postaci dymków ala messenger
+// css i poprawa wyglądu strony
+// 
