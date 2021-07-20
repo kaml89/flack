@@ -1,3 +1,3 @@
-# Project 2
+# flack
 
-Web Programming with Python and JavaScript
+Simplified Slack app created in Javascript and Python using Flask framework and Socket.IO
